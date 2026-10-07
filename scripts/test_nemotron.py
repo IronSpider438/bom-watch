@@ -4,10 +4,12 @@ Reads NEBIUS_API_KEY from .env (never hard-code the key).
 Run from the repo root:  python scripts/test_nemotron.py
 """
 import os
+import sys
 from dotenv import load_dotenv
 from openai import OpenAI
 
-load_dotenv()
+sys.stdout.reconfigure(encoding="utf-8")  # model output can contain non-ASCII punctuation
+load_dotenv(".env")
 key = os.environ.get("NEBIUS_API_KEY", "").strip()
 if not key:
     raise SystemExit("NEBIUS_API_KEY is empty — paste your key into .env first.")
@@ -25,7 +27,9 @@ model = nvidia[0]
 resp = client.chat.completions.create(
     model=model,
     messages=[{"role": "user", "content": "In one sentence: what does an LDO voltage regulator do?"}],
-    max_tokens=80,
+    max_tokens=300,
+    # Nemotron 3 "thinks" before answering by default; off = ~10x fewer tokens for simple tasks
+    extra_body={"chat_template_kwargs": {"enable_thinking": False}},
 )
 print(f"\nTest call to {model}:")
 print(resp.choices[0].message.content)
