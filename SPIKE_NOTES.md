@@ -23,3 +23,8 @@
 ## Open
 - Pinout is not in the catalogue → output "verify pinout in datasheet" (datasheet URL is available per part).
 - How often jlcparts updates (GitHub Action) — check before relying on "daily".
+
+## BOM matching (12 Oct 2026)
+- LDO category now has 3 shards / 2,067 parts (was 1,119 on 7 Oct) — the catalogue grows; never hard-code counts.
+- **Not every LCSC number is in jlcparts.** C6186 (the classic AMS1117-3.3 basic part) is missing from the snapshot. So matching falls back to the part name, narrowed by footprint (`SOT-223-3_TabPin2` → keeps SOT-223/SOT223, drops SOT-89/TO-252).
+- Same name, several LCSC numbers (different manufacturers' clones) → reported as `ambiguous`, not silently picked.
