@@ -28,3 +28,8 @@
 - LDO category now has 3 shards / 2,067 parts (was 1,119 on 7 Oct) — the catalogue grows; never hard-code counts.
 - **Not every LCSC number is in jlcparts.** C6186 (the classic AMS1117-3.3 basic part) is missing from the snapshot. So matching falls back to the part name, narrowed by footprint (`SOT-223-3_TabPin2` → keeps SOT-223/SOT223, drops SOT-89/TO-252).
 - Same name, several LCSC numbers (different manufacturers' clones) → reported as `ambiguous`, not silently picked.
+
+## ⚠️ Stock data is not live (17 Oct 2026)
+- Compared the cached LDO shards from 9 Oct and 17 Oct: **all 1,509 parts present on both days have identical stock numbers (0 changed)**, while 2,452 new parts were added (C6186 now present). The manifest is regenerated daily, but the stock field for existing parts does not move.
+- Consequence: a daily jlcparts snapshot will almost never show a real stock-out. Specs/packages from jlcparts are still fine; **live stock/price needs another source** (e.g. LCSC's official API, which needs an application/key — check its terms) or must be stated as a limitation.
+- For the hackathon demo, `scripts/demo_replay.py` replays a clearly-labelled **simulated** next day. Decision on the live-data source is open (Jayesh to decide).
