@@ -19,7 +19,32 @@ A candidate is a valid substitute for `target` only if ALL of these hold:
 Return the valid candidates sorted by price, cheapest first.
 """
 
-
+def clean(pkg):
+    return (pkg or "").replace("-", "").upper()
 def find_substitutes(target, catalog):
-    # TODO: Jayesh writes this
-    return []
+    result = []
+    for p in catalog:
+        # rule 7: skip the target itself
+        if p["lcsc"] == target["lcsc"]:
+            continue
+        # rule 6: in stock
+        if not p["stock"]:
+            continue
+        # rule 1: same output voltage
+        if p["vout"] !=target["vout"] :
+            continue
+        # rule 2: same package (SOT-223 == SOT223)
+        if clean(p["package"]) != clean(target["package"]):
+            continue
+        # rule 3: output current >= target's
+        if p["iout_max"] is None or p["iout_max"] < target["iout_max"]:
+            continue
+        # rule 4: max input voltage >= target's
+        if p["vin_max"] is None or p["vin_max"] < target["vin_max"]:
+            continue
+        # rule 5: dropout <= target's
+        if p["dropout"] is None or p["dropout"] > target["dropout"]:
+            continue
+        result.append(p)        # survived every rule
+    result.sort(key=lambda p: p["price"] or 999)
+    return result
