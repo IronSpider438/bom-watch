@@ -17,8 +17,8 @@ A candidate is a valid substitute for `target` only if ALL of these hold:
     7. not the target itself (different lcsc)
 
 Return the valid candidates sorted by price, cheapest first.
-"""
-
+""" 
+from .agent import plausibility_flags
 def clean(pkg):
     return (pkg or "").replace("-", "").upper()
 def find_substitutes(target, catalog):
@@ -44,6 +44,9 @@ def find_substitutes(target, catalog):
             continue
         # rule 5: dropout <= target's
         if p["dropout"] is None or p["dropout"] > target["dropout"]:
+            continue
+        # rule 8: don't trust parts with impossible catalouge data
+        if plausibility_flags(p):
             continue
         result.append(p)        # survived every rule
     result.sort(key=lambda p: p["price"] or 999)
