@@ -25,6 +25,16 @@ st.title("🔌 BOM Watch")
 st.caption("Watches every part in your bill of materials. When one sells out or jumps in price, "
            "code finds drop-in substitutes and NVIDIA Nemotron explains them.")
 
+# How it works: four steps, so a first-time visitor sees the pipeline before the details
+for col, (step, text) in zip(st.columns(4), [
+        ("📄 1 · Read BOM", "CSV from KiCad / EasyEDA / JLCPCB, matched to the jlcparts catalogue"),
+        ("📊 2 · Compare days", "Today's stock and price vs the next day: sold out, low stock, price jump"),
+        ("✅ 3 · Code verifies", "Drop-in substitutes must pass every hard check. No AI decides this"),
+        ("🤖 4 · Nemotron explains", "NVIDIA Nemotron on Nebius writes the alert from the verified facts")]):
+    with col.container(border=True):
+        st.markdown(f"**{step}**")
+        st.caption(text)
+
 
 @st.cache_data(ttl=24 * 3600, show_spinner="Downloading the JLCPCB/LCSC LDO catalogue (jlcparts)...")
 def catalog():
@@ -64,6 +74,12 @@ if st.button("Run BOM Watch", type="primary"):
     st.subheader("3 · Alerts")
     if not alerts:
         st.success("No changes.")
+    else:                                         # one-glance summary above the details
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Alerts", len(alerts))
+        m2.metric("Verified substitutes", sum(len(a["substitutes"]) for a in alerts))
+        m3.metric("Written by", "Nemotron" if all(a["written_by"] != "template" for a in alerts)
+                  else "Template (AI offline)")
     for a in alerts:
         e = a["event"]
         with st.container(border=True):
