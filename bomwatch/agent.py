@@ -15,7 +15,7 @@ import os
 
 from dotenv import load_dotenv
 
-MODEL = "nvidia/nemotron-3-super-120b-a12b"
+MODEL = "nvidia/Nemotron-3-Ultra-550b-a55b"   # Super-120B retires on Token Factory 9 Nov 2026
 BASE_URL = "https://api.tokenfactory.nebius.com/v1/"
 
 EVENT_TEXT = {
