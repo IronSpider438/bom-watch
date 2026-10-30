@@ -89,7 +89,9 @@ SYSTEM = (
     "parts, numbers or specs. The substitutes were already checked by code against the exact "
     "rules in 'checks_applied_by_code'; quote those rules exactly if you mention them. Explain in plain English why each one is a safe swap and how it differs "
     "(price, stock, margins). Repeat every warning. Always end by telling the engineer to confirm "
-    "the PINOUT in the datasheet, because the catalogue does not list pinouts. Max 150 words."
+    "the PINOUT in the datasheet, because the catalogue does not list pinouts. Max 150 words. "
+    "Write the alert once: one opening sentence, one bullet per substitute, one closing line. "
+    "Never repeat a sentence or a bullet."
 )
 
 
@@ -103,8 +105,9 @@ def write_alert(event, target, substitutes, client=None):
             model=MODEL,
             messages=[{"role": "system", "content": SYSTEM},
                       {"role": "user", "content": json.dumps(_facts(event, target, substitutes))}],
-            max_tokens=500,
+            max_tokens=700,
             temperature=0.2,
+            frequency_penalty=0.3,                  # stops the model looping on its own text
             extra_body={"chat_template_kwargs": {"enable_thinking": False}},
         )
         return resp.choices[0].message.content.strip(), MODEL
