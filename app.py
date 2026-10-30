@@ -10,7 +10,7 @@ import pandas as pd
 import streamlit as st
 
 try:                                            # Streamlit Cloud secrets -> environment
-    os.environ.setdefault("NEBIUS_API_KEY", st.secrets["NEBIUS_API_KEY"])
+    os.environ["NEBIUS_API_KEY"] = st.secrets["NEBIUS_API_KEY"].strip()  # overwrite so edited secrets apply
 except Exception:
     pass
 

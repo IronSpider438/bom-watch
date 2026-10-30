@@ -68,7 +68,7 @@ def _template_alert(event, target, substitutes):
         lines.append("No catalogue part passed all the drop-in checks.")
     for s in substitutes[:3]:
         lines.append(f"- {s['part']} ({s['lcsc']}), {s['package']}, {s['iout_max']} A, "
-                     f"Vin max {s['vin_max']} V, dropout {s['dropout']} V, ${s['price']}, stock {s['stock']}")
+                     f"Vin max {s['vin_max']} V, dropout {round(s['dropout'], 3)} V, ${s['price']}, stock {s['stock']}")
         lines += [f"    warning: {w}" for w in plausibility_flags(s)]
     lines.append("Always check the pinout in the datasheet before swapping.")
     return "\n".join(lines)
