@@ -17,6 +17,14 @@ Component data comes from the open [jlcparts](https://github.com/yaqwsx/jlcparts
 
 MVP scope: LDO voltage regulators.
 
+**Live demo:** https://bom-watch.streamlit.app · **Video:** https://youtu.be/tPj-Tr4eVCg
+
+## How NVIDIA Nemotron and Nebius Token Factory are used
+- **Model:** `nvidia/nemotron-3-super-120b-a12b` (NVIDIA Nemotron 3 Super, open model), called at runtime for every alert (`bomwatch/agent.py`).
+- **Where:** Nebius Token Factory's OpenAI-compatible endpoint (`https://api.tokenfactory.nebius.com/v1/`) via the standard OpenAI Python SDK.
+- **Role:** Nemotron receives only the code-verified facts as JSON and writes the plain-English alert. A system prompt restricts it to those facts, temperature is 0.2, a frequency penalty prevents repetition, and thinking mode is off because the reasoning is done by code.
+- **Why Token Factory helped:** serverless inference meant no GPU setup or deployment. A 120B-parameter model runs from a free Streamlit Cloud app with one API key, and per-token billing keeps each alert cheap.
+
 ## Known limitation: the demo's "next day" is simulated
 The jlcparts stock field does not update day to day (0 of 1,509 parts changed over 8 days; see `SPIKE_NOTES.md`). The demo therefore replays a clearly labelled, hand-edited next day (one part sells out, one rises 35%). Everything after that is the real pipeline. A live source (e.g. LCSC's official API) would replace only the snapshot step.
 
