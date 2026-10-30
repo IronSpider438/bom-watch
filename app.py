@@ -82,3 +82,8 @@ if st.button("Run BOM Watch", type="primary"):
 st.divider()
 st.caption("Data: jlcparts (MIT) · Model: NVIDIA Nemotron on Nebius Token Factory · "
            "Always confirm the pinout in the datasheet before swapping a part.")
+
+# TEMPORARY key check: shows only the length and a short hash, never the key itself
+import hashlib
+_k = os.environ.get("NEBIUS_API_KEY", "")
+st.caption(f"key check: length {len(_k)} · fingerprint {hashlib.sha256(_k.encode()).hexdigest()[:8]}")
